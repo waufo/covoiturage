@@ -13,3 +13,10 @@ php artisan key:generate
 php artisan migrate
 npm install && npm run dev ou php artisan serve
 ```
+
+📚 Fonctionnalités
+
+ Authentification
+ CRUD utilisateurs
+ CRUD trajets
+ API REST
