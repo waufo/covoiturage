@@ -1,48 +1,73 @@
 <?php
 
+/**
+ * Created by Reliese Model.
+ */
+
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
-use Tymon\JWTAuth\Contracts\JWTSubject;
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Model;
 
-class User extends Authenticatable implements JWTSubject
+/**
+ * Class User
+ * 
+ * @property int $id
+ * @property string $name
+ * @property string $username
+ * @property string|null $email
+ * @property bool $isOnline
+ * @property bool $isMobileVerified
+ * @property string|null $otp
+ * @property string $role
+ * @property float|null $longitude
+ * @property float|null $latitude
+ * @property string $phone_number
+ * @property Carbon|null $email_verified_at
+ * @property string $password
+ * @property string|null $remember_token
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * 
+ * @property Trip|null $trip
+ *
+ * @package App\Models
+ */
+class User extends Model
 {
-    use HasFactory, Notifiable;
+	protected $table = 'users';
 
-    protected $fillable = [
-        'name',
-        'username',
-        'email',
-        'phone_number',
-        'password'
-    ];
+	protected $casts = [
+		'isOnline' => 'bool',
+		'isMobileVerified' => 'bool',
+		'longitude' => 'float',
+		'latitude' => 'float',
+		'email_verified_at' => 'datetime'
+	];
 
-    protected $hidden = [
-        'password',
-        'remember_token',
-    ];
+	protected $hidden = [
+		'password',
+		'remember_token'
+	];
 
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-        'password' => 'hashed',
-    ];
+	protected $fillable = [
+		'name',
+		'username',
+		'email',
+		'isOnline',
+		'isMobileVerified',
+		'otp',
+		'role',
+		'longitude',
+		'latitude',
+		'phone_number',
+		'email_verified_at',
+		'password',
+		'remember_token'
+	];
 
-    // Méthodes requises pour JWT
-    public function getJWTIdentifier()
-    {
-        return $this->getKey();
-    }
-
-    public function getJWTCustomClaims()
-    {
-        return [];
-    }
-
-    // Méthode pour trouver un utilisateur par téléphone (pour l'auth)
-    public function findForPassport($identifier)
-    {
-        return $this->where('phone_number', $identifier)->first();
-    }
+	public function trip()
+	{
+		return $this->hasOne(Trip::class, 'passenger_id');
+	}
 }
